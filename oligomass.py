@@ -35,7 +35,7 @@ def get_simple_ssdna_extinction(string, ext_tab):
     for i in range(1, len(seq) - 1):
         key = seq[i]
         s -= ext_tab[key]
-    return s
+    return round(s, 0)
 
 
 def melting_temp(string):
