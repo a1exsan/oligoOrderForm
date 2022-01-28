@@ -32,6 +32,9 @@ if order != None:
 else:
     st.write(order.msg_equal_seq)
 
+chatID = st.secrets['chat_id']
+token_ = st.secrets['chat_token']
+
 if st.button('Отправить заказ'):
     df = order.create_send_df()
     if not df.empty:
@@ -39,7 +42,7 @@ if st.button('Отправить заказ'):
         if not back.compare_files_hash(hash, path='data'):
             Fname = f'data/{hash}_{order.date.date()}_{order.user}.csv'
             order.data.to_csv(Fname)
-            tbot.send_document(Fname, message=f'from: {order.user}')
+            tbot.send_document(Fname, message=f'from: {order.user}', token=token_, chat_id=chatID)
             st.write("Заказ успешно создан!")
         else:
             st.write("Данный заказ уже был создан!")
