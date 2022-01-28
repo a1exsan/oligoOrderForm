@@ -62,5 +62,6 @@ def test():
         print(uid.uuid(name = 'oligos'))
         #print(uid.ShortUUID().random(length=5))
 
+
 if __name__ == '__main__':
     test()

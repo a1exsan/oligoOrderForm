@@ -1,5 +1,7 @@
+import pandas as pd
 import streamlit as st
 import order_back as back
+import telegram_bot as tbot
 
 
 st.set_page_config(layout="wide")
@@ -30,4 +32,12 @@ if order != None:
 else:
     st.write(order.msg_equal_seq)
 
-st.button('Отправить заказ')
+if st.button('Отправить заказ'):
+    #df = pd.DataFrame(order.data)
+    #df['date']
+    order.data.to_csv('data/order.csv')
+
+    tbot.send_document('data/order.csv')
+
+
+
