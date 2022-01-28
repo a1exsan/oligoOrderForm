@@ -1,12 +1,32 @@
 import pandas as pd
 import oligomass as omass
 import shortuuid as uid
+import os
+from os import walk
+
+def compare_files_hash(hash, path='data'):
+    files = []
+    for (dirpath, dirnames, filenames) in walk(path):
+        files.extend(filenames)
+    ctrl = False
+    for file in files:
+        if file.find('_') != -1:
+            print(hash, file[0: file.find('_')])
+            if hash == file[0: file.find('_')]:
+                ctrl = True
+                break
+    return ctrl
 
 class oligoOrder():
-    def __init__(self, label_, seq_, amount_, units_):
-        self.data = None
+    def __init__(self, label_, seq_, amount_, units_, user_):
+        self.label = label_
+        self.seq = seq_
+        self.amount = amount_
+        self.units = units_
+        self.data = pd.DataFrame()
         self.order = None
         self.units = units_
+        self.user = user_
         self.msg_equal_seq = ''
         self.date = pd.to_datetime('today')
         self.__set_data(label_, seq_, amount_)
@@ -50,9 +70,24 @@ class oligoOrder():
             elif amount_[0] == '':
                 self.msg_equal_seq = 'WARNING: change amounts'
 
+    def create_data_hash(self):
+        hash1 = uid.uuid(name=self.label)
+        hash2 = uid.uuid(name=self.seq)
+        hash3 = uid.uuid(name=self.amount)
+        hash4 = uid.uuid(name=self.units)
+        return uid.uuid(name=hash1 + hash2 + hash3 + hash4)
 
     def create_order(self):
         return self.data
+
+    def create_send_df(self):
+        df = pd.DataFrame(self.data)
+        if not self.data.empty:
+            self.date = pd.to_datetime('today')
+            df['DateTime'] = [str(self.date) for i in range(self.data.shape[0])]
+            df['Units'] = [self.units for i in range(self.data.shape[0])]
+            df['Customer'] = [self.user for i in range(self.data.shape[0])]
+        return df
 
 
 def test():
@@ -63,5 +98,8 @@ def test():
         #print(uid.ShortUUID().random(length=5))
 
 
+def test2():
+    print(compare_files_hash('BVptoUTNMgE95FumhQ3MpL'))
+
 if __name__ == '__main__':
-    test()
+    test2()
