@@ -11,7 +11,6 @@ def compare_files_hash(hash, path='data'):
     ctrl = False
     for file in files:
         if file.find('_') != -1:
-            print(hash, file[0: file.find('_')])
             if hash == file[0: file.find('_')]:
                 ctrl = True
                 break
