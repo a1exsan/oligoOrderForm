@@ -1,8 +1,5 @@
 from telegram.ext import Updater
-from telegram import Update
 from telegram.ext import CallbackContext
-from telegram.ext import CommandHandler
-from telegram.ext import MessageHandler, Filters
 from io import BytesIO
 
 def send_document(doc_filename='test.txt', message='test', token='', chat_id=''):
