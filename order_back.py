@@ -1,8 +1,9 @@
 import pandas as pd
-import oligomass as omass
+#import oligomass as omass
 import shortuuid as uid
 import os
 from os import walk
+from oligoMass import molmassOligo as mmo
 
 def compare_files_hash(hash, path='data'):
     files = []
@@ -47,8 +48,20 @@ class oligoOrder():
             else:
                 self.data['Amount'] = amount_
 
-            self.data['Mass, Da'] = [round(omass.oligoSeq(s).getMolMass(), 2) for s in seq_]
-            self.data['Extinction'] = [omass.get_simple_ssdna_extinction(s, omass.get_extinction_dict()) for s in seq_]
+            masses, exts = [], []
+            for s in seq_:
+                try:
+                    mass = mmo.oligoNASequence(s).getAvgMass()
+                    ext = mmo.dna.get_simple_ssdna_extinction(s, mmo.dna.get_extinction_dict())
+                    masses.append(mass)
+                    exts.append(ext)
+                except Exception as e:
+                    masses.append('error seq')
+                    exts.append('error seq')
+                    print(e)
+
+            self.data['Mass, Da'] = masses#[round(omass.oligoSeq(s).getMolMass(), 2) for s in seq_]
+            self.data['Extinction'] = exts#[omass.get_simple_ssdna_extinction(s, omass.get_extinction_dict()) for s in seq_]
 
             uid_list = []
             for l, s, index in zip(label_, seq_, range(len(label_))):

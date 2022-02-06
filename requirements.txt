@@ -3,3 +3,4 @@ pandas
 molmass
 shortuuid
 python-telegram-bot
+oligoMass==0.0.4
